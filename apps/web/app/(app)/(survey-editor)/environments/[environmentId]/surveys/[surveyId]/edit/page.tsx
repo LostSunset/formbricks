@@ -24,14 +24,17 @@ import { getUserLocale } from "@formbricks/lib/user/service";
 import { ErrorComponent } from "@formbricks/ui/components/ErrorComponent";
 import { SurveyEditor } from "./components/SurveyEditor";
 
-export const generateMetadata = async ({ params }) => {
+export const generateMetadata = async (props) => {
+  const params = await props.params;
   const survey = await getSurvey(params.surveyId);
   return {
     title: survey?.name ? `${survey?.name} | Editor` : "Editor",
   };
 };
 
-const Page = async ({ params, searchParams }) => {
+const Page = async (props) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const t = await getTranslations();
   const [
     survey,
@@ -48,7 +51,7 @@ const Page = async ({ params, searchParams }) => {
     getProductByEnvironmentId(params.environmentId),
     getEnvironment(params.environmentId),
     getActionClasses(params.environmentId),
-    getAttributeClasses(params.environmentId),
+    getAttributeClasses(params.environmentId, undefined, { skipArchived: true }),
     getResponseCountBySurveyId(params.surveyId),
     getOrganizationByEnvironmentId(params.environmentId),
     getServerSession(authOptions),
