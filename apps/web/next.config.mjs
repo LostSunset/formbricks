@@ -167,7 +167,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.intercom.io https://*.intercomcdn.com; style-src 'self' 'unsafe-inline' https://*.intercomcdn.com; img-src 'self' blob: data: https://*.intercom.io https://*.intercomcdn.com; font-src 'self' data: https://*.intercomcdn.com; connect-src 'self' https://*.intercom.io wss://*.intercom.io https://*.intercomcdn.com https:; frame-src 'self' https://*.intercom.io; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.intercom.io https://*.intercomcdn.com https:; style-src 'self' 'unsafe-inline' https://*.intercomcdn.com https:; img-src 'self' blob: data: https://*.intercom.io https://*.intercomcdn.com data: https:; font-src 'self' data: https://*.intercomcdn.com https:; connect-src 'self' https://*.intercom.io wss://*.intercom.io https://*.intercomcdn.com https:; frame-src 'self' https://*.intercom.io https://app.cal.com https:; media-src 'self' https:; object-src 'self' data: https:; base-uri 'self'; form-action 'self'",
           },
         ],
       },
@@ -239,6 +239,26 @@ const nextConfig = {
         source: "/api/v1/client/:environmentId/app/people/:userId",
         destination: "/api/v1/client/:environmentId/identify/people/:userId",
       },
+      {
+        source: "/api/v1/client/:environmentId/identify/people/:userId",
+        destination: "/api/v1/client/:environmentId/identify/contacts/:userId",
+      },
+      {
+        source: "/api/v1/client/:environmentId/people/:userId/attributes",
+        destination: "/api/v1/client/:environmentId/contacts/:userId/attributes",
+      },
+      {
+        source: "/api/v1/management/people/:id*",
+        destination: "/api/v1/management/contacts/:id*",
+      },
+      {
+        source: "/api/v1/management/attribute-classes",
+        destination: "/api/v1/management/contact-attribute-keys",
+      },
+      {
+        source: "/api/v1/management/attribute-classes/:id*",
+        destination: "/api/v1/management/contact-attribute-keys/:id*",
+      },
     ];
   },
   env: {
@@ -255,6 +275,7 @@ if (process.env.CUSTOM_CACHE_DISABLED !== "1") {
 if (process.env.WEBAPP_URL) {
   nextConfig.experimental.serverActions = {
     allowedOrigins: [process.env.WEBAPP_URL.replace(/https?:\/\//, "")],
+    bodySizeLimit: "2mb",
   };
 }
 
