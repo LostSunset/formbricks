@@ -1,3 +1,4 @@
+import { managementServer } from "@/modules/api/v2/management/lib/openapi";
 import {
   deleteResponseEndpoint,
   getResponseEndpoint,
@@ -13,7 +14,7 @@ export const getResponsesEndpoint: ZodOpenApiOperationObject = {
   summary: "Get responses",
   description: "Gets responses from the database.",
   requestParams: {
-    query: ZGetResponsesFilter.sourceType().required(),
+    query: ZGetResponsesFilter.sourceType(),
   },
   tags: ["Management API > Responses"],
   responses: {
@@ -56,10 +57,12 @@ export const createResponseEndpoint: ZodOpenApiOperationObject = {
 
 export const responsePaths: ZodOpenApiPathsObject = {
   "/responses": {
+    servers: managementServer,
     get: getResponsesEndpoint,
     post: createResponseEndpoint,
   },
   "/responses/{id}": {
+    servers: managementServer,
     get: getResponseEndpoint,
     put: updateResponseEndpoint,
     delete: deleteResponseEndpoint,

@@ -1,12 +1,14 @@
-import { contactAttributeKeyPaths } from "@/modules/api/v2/management/contact-attribute-keys/lib/openapi";
-import { contactAttributePaths } from "@/modules/api/v2/management/contact-attributes/lib/openapi";
-import { contactPaths } from "@/modules/api/v2/management/contacts/lib/openapi";
+// import { contactAttributeKeyPaths } from "@/modules/api/v2/management/contact-attribute-keys/lib/openapi";
+// import { contactAttributePaths } from "@/modules/api/v2/management/contact-attributes/lib/openapi";
+// import { contactPaths } from "@/modules/api/v2/management/contacts/lib/openapi";
 import { responsePaths } from "@/modules/api/v2/management/responses/lib/openapi";
+import { surveyContactLinksBySegmentPaths } from "@/modules/api/v2/management/surveys/[surveyId]/contact-links/segments/lib/openapi";
 import { surveyPaths } from "@/modules/api/v2/management/surveys/lib/openapi";
 import { webhookPaths } from "@/modules/api/v2/management/webhooks/lib/openapi";
 import { mePaths } from "@/modules/api/v2/me/lib/openapi";
 import { projectTeamPaths } from "@/modules/api/v2/organizations/[organizationId]/project-teams/lib/openapi";
 import { teamPaths } from "@/modules/api/v2/organizations/[organizationId]/teams/lib/openapi";
+import { userPaths } from "@/modules/api/v2/organizations/[organizationId]/users/lib/openapi";
 import { rolePaths } from "@/modules/api/v2/roles/lib/openapi";
 import { bulkContactPaths } from "@/modules/ee/contacts/api/v2/management/contacts/bulk/lib/openapi";
 import * as yaml from "yaml";
@@ -21,6 +23,7 @@ import { ZResponse } from "@formbricks/database/zod/responses";
 import { ZRoles } from "@formbricks/database/zod/roles";
 import { ZSurveyWithoutQuestionType } from "@formbricks/database/zod/surveys";
 import { ZTeam } from "@formbricks/database/zod/teams";
+import { ZUser } from "@formbricks/database/zod/users";
 import { ZWebhook } from "@formbricks/database/zod/webhooks";
 
 extendZodWithOpenApi(z);
@@ -37,17 +40,19 @@ const document = createDocument({
     ...mePaths,
     ...responsePaths,
     ...bulkContactPaths,
-    ...contactPaths,
-    ...contactAttributePaths,
-    ...contactAttributeKeyPaths,
+    // ...contactPaths,
+    // ...contactAttributePaths,
+    // ...contactAttributeKeyPaths,
     ...surveyPaths,
+    ...surveyContactLinksBySegmentPaths,
     ...webhookPaths,
     ...teamPaths,
     ...projectTeamPaths,
+    ...userPaths,
   },
   servers: [
     {
-      url: "https://app.formbricks.com/api/v2/management",
+      url: "https://app.formbricks.com/api/v2",
       description: "Formbricks Cloud",
     },
   ],
@@ -81,6 +86,10 @@ const document = createDocument({
       description: "Operations for managing surveys.",
     },
     {
+      name: "Management API > Surveys > Contact Links",
+      description: "Operations for generating personalized survey links for contacts.",
+    },
+    {
       name: "Management API > Webhooks",
       description: "Operations for managing webhooks.",
     },
@@ -91,6 +100,10 @@ const document = createDocument({
     {
       name: "Organizations API > Project Teams",
       description: "Operations for managing project teams.",
+    },
+    {
+      name: "Organizations API > Users",
+      description: "Operations for managing users.",
     },
   ],
   components: {
@@ -113,6 +126,7 @@ const document = createDocument({
       webhook: ZWebhook,
       team: ZTeam,
       projectTeam: ZProjectTeam,
+      user: ZUser,
     },
   },
   security: [
